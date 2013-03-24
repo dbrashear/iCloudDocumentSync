@@ -20,7 +20,7 @@
     <header>
       <div class="inner">
         <h1>iCloudDocumentSync</h1>
-        <h2>Integrate iCloud into iOS document projects with one-line code methods. Sync, upload,manage, and remove documents to and from iCloud with single-line methods..</h2>
+        <h2>Integrate iCloud into Objective-C iOS Apps with one-line code methods. Sync, upload, manage, and remove documents to and from iCloud with single-line methods..</h2>
         <a href="https://github.com/iRareMedia/iCloudDocumentSync" class="button"><small>View project on</small>GitHub</a>
       </div>
     </header>
@@ -28,9 +28,18 @@
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-          <h1>iCloudDocumentSync</h1>
+          <h1>iCloud Document Sync</h1>
 
-<p>iCloud Document Sync allows developers to integrate iCloud into their document projects with one-line code methods. Sync, upload, manage, and remove documents to and from iCloud with only ten lines of code.</p>
+<p>iCloud Document Sync allows developers to integrate iCloud into their Objective-C iOS Apps with one-line code methods. Sync, upload, manage, and remove documents to and from iCloud with only ten lines of code. This project comes with three main parts:  </p>
+
+<ul>
+<li>The iCloud Classes: The editable code that makes up the iCloud classes.<br>
+</li>
+<li>The iCloud Framework: A nice neat framework ready to be dragged into your iOS App.<br>
+</li>
+<li>The Documentation: A Doc Set that can be installed into Xcode. By installing this doc set, you can access full framework documentation directly in Xcode, the Quick Help Menu, and Organizer.<br>
+</li>
+</ul><p>The only requirements for is project are that you have a valid Code Signing ID (to build and debug on an actual device), a valid iCloud Entitlements file (can easily be setup in Xcode), your app runs on iOS 5 or higher (iCloud isn't available on older versions), and you have an understanding of Objective-C.</p>
 
 <h2>Integration</h2>
 
@@ -51,7 +60,13 @@
 </code></pre>
 
 <p>It is important that you set the iCloud delegate, otherwise some methods may not be called. This also help to begin the sync process.<br>
-5. Add the following <strong>required</strong> delegate methods: <code>- (void)fileListChangedWithFiles:(NSMutableArray *)files andFileNames:(NSMutableArray *)fileNames</code>   and <code>- (void)cloudError:(NSError *)error</code>. If you like, you can add other optional delegate methods. Check the documentation that comes with iCloud Document Sync for more information.</p>
+5. Add the following <strong>required</strong> delegate methods:  </p>
+
+<pre><code>- (void)fileListChangedWithFiles:(NSMutableArray *)files andFileNames:(NSMutableArray *)fileNames  
+- (void)cloudError:(NSError *)error 
+</code></pre>
+
+<p>If you like, you can add other optional delegate methods. Check the documentation that comes with iCloud Document Sync for more information.</p>
 
 <h2>Checking for iCloud Availability</h2>
 
