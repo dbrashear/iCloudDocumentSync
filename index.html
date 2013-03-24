@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>iCloudDocumentSync by iRareMedia</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>iCloudDocumentSync</h1>
+        <h2>Integrate iCloud into iOS document projects with one-line code methods. Sync, upload,manage, and remove documents to and from iCloud with single-line methods..</h2>
+        <a href="https://github.com/iRareMedia/iCloudDocumentSync" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>iCloudDocumentSync</h1>
+
+<p>iCloud Document Sync allows developers to integrate iCloud into their document projects with one-line code methods. Sync, upload, manage, and remove documents to and from iCloud with only ten lines of code.</p>
+
+<h2>Integration</h2>
+
+<p>Adding iCloud Document sync to your project is easy. Follow these steps to get everything up and running:<br>
+1. Drag the iCloud Framework into your project<br>
+2. Add <code>#import &lt;iCloud/iCloud.h&gt;</code> to the header file of any class with which you wish to use iCloud Document Sync<br>
+3. Add the <code>&lt;iCloudDelegate&gt;</code> delegate to all of the files that import <code>&lt;iCloud/iCloud.h&gt;</code> Here's what your document should look like:</p>
+
+<pre><code>#import &lt;iCloud/iCloud.h&gt;
+@interface ViewController : UIViewController &lt; iCloudDelegate &gt;  
+</code></pre>
+
+<p>This next step is very important. Don't skip it!<br>
+4. In your <code>viewDidLoad</code> or <code>viewDidAppear</code> make sure to call the following functions to setup iCloud:  </p>
+
+<pre><code>iCloud *cloud = [[iCloud alloc] init];
+[cloud setDelegate:self];  
+</code></pre>
+
+<p>It is important that you set the iCloud delegate, otherwise some methods may not be called. This also help to begin the sync process.<br>
+5. Add the following <strong>required</strong> delegate methods: <code>- (void)fileListChangedWithFiles:(NSMutableArray *)files andFileNames:(NSMutableArray *)fileNames</code>   and <code>- (void)cloudError:(NSError *)error</code>. If you like, you can add other optional delegate methods. Check the documentation that comes with iCloud Document Sync for more information.</p>
+
+<h2>Checking for iCloud Availability</h2>
+
+<p>To check if iCloud is available use <code>[iCloud checkCloudAvailability];</code>. This method will return a boolean value (YES / NO). You can retrieve the value like this:</p>
+
+<pre><code>BOOL cloudIsAvailable = [iCloud checkCloudAvailability];
+if (cloudIsAvailable) {
+    //YES
+} else {
+    //NO
+}
+</code></pre>
+
+<h2>Syncing Documents</h2>
+
+<p>To get iCloud Sync to initialize for the first time, and continue to update when there are changes call <code>[[iCloud alloc] init];</code> to start syncing with iCloud for the first time and in the future. </p>
+
+<p>To manually fetch changes from iCloud, just call <code>[iCloud updateFileListWithDelegate:]</code>. Please refer to the next paragraph about how to get the file list and file data.</p>
+
+<p>iCloud Document Sync will automatically sync all documents stored in the documents folder whenever there are changes in those documents. When something changes the following delegate method will be called and will return an NSMutableArray of all the files (and their names) that are stored in iCloud: <code>[fileListChangedWithFiles: andFileNames:]</code>.</p>
+
+<h2>Uploading Documents</h2>
+
+<p>iCloud Document Sync uses UIDocument and NSData to store and manage files - no worries though, you don't have to even think about UIDocument. You can create documents filled with NSData directly in iCloud or offline. </p>
+
+<p>To create a document in iCloud, call <code>[iCloud createDocumentNamed: withContent: withDelegate:]</code>. Specify the name of the document with the desired extension, specify the NSData content, and set the delegate. The <code>documentWasSaved</code> delegate method is called after the document is successfully created in iCloud.</p>
+
+<p>To upload any documents created while offline, or locally just call <code>[iCloud uploadLocalOfflineDocumentsWithDelegate:]</code>. Files in the local documents directory that do not already exist in iCloud will be <em>moved</em> into iCloud one by one. This process involves lots of file manipulation and as a result it may take a long time. This process will be performed on the background thread to avoid any lag or memory problems. Two delegate methods: <code>documentsStartedUploading</code> and <code>documentsFinishedUploading</code> will be called when the upload process starts and when all uploads end.</p>
+
+<h2>Removing Documents</h2>
+
+<p>Documents can be deleted from iCloud by using the following method: <code>[iCloud removeDocumentNamed: withDelegate:]</code>. The <code>documentWasDeleted</code> delegate method is called when the file is successfully deleted.</p>
+
+<h2>Retrieving Documents and Data</h2>
+
+<p>You can get a UIDocument stored in your iCloud documents directory with the following method: <code>[iCloud openDocumentNamed:]</code>. This method will return a UIDocument from the specified file (make sure to specify the extension). You can retrieve the value like this:</p>
+
+<pre><code>UIDocument  *document = [iCloud openDocumentNamed:@"DocumentName.ext"];
+</code></pre>
+
+<p>You can get the NSData contained in the UIDocument with this method: <code>[iCloud getDataFromDocumentNamed];</code>. This method will return NSData from the specified file (make sure to specify the extension). You can retrieve the value like this:</p>
+
+<pre><code>  NSData *documentData = [iCloud getDataFromDocumentNamed:@"DocumentName.ext"];   
+</code></pre>
+
+<p>Files retrieved are always searched for in your iCloud app's documents directory. If a file does not exist it will return a <code>nil</code> value instead of actual data.</p>
+
+<h2>Other Details</h2>
+
+<p>It may provide a little peace of mind to read this section. Although this project is a work in progress, we have gone to great lengths to prevent lag, unresponsiveness, unhandled exceptions, and crashes.   </p>
+
+<ul>
+<li> Every bit of memory intensive code (pretty much anything related to iCloud) is performed on a separate background thread to prevent clogs in the UI.<br>
+</li>
+<li> Each method is prepared to continue execution even when the user sends the app into the background.<br>
+</li>
+<li> Most methods are wrapped in <code>Try / Catch</code> statements. If something goes wrong iCloud Document Sync will try to handle the error gracefully by calling the <code>[cloudError:]</code> delegate method. This method will give you an <code>NSError</code> object containing the error that occurred.<br>
+</li>
+<li> iCloud Document Sync uses <code>NSLog</code> and a variety of delegate methods to show you what is happening</li>
+</ul><h2>Change Log</h2>
+
+<p><strong>iCloud Document Sync is a work in progress</strong>. Please help us get all features working and working well. We believe that this project will help many developers by easing the burden of iCloud. Below are the changes for each major commit:</p>
+
+<p>Version 5.0 - All methods have been completely revised and improved. Code is much cleaner. Now uses more efficient UIDocument structure than NSFileManager. Project now also includes a Framework which can be used for easy addition to projects. Better documentation, new methods, and more!</p>
+
+<p>Version 4.3.1 - License Update. Readme Update.<br>
+Version 4.3 - New delegate methods for error reporting and file downloading. File downloading introduced but not implemented. Updated Readme.<br>
+Version 4.2 - Fixed errors when uploading files<br>
+Version 4.1 - Updated Readme<br>
+Version 4.0 - Upload and retrieve files with greater ease  </p>
+
+<p>Version 3.0 - iCloud Syncing now allows for the uploading of all files in the local directory with one call. Gets changes every time iCloud notifies of a change</p>
+
+<p>Version 2.1 - Changed the File List to an <code>NSMutableArray</code> for better flexibility<br>
+Version 2.0 - New delegate methods  </p>
+
+<p>Version 1.1 - Add ability to remove documents from iCloud and local directory<br>
+Version 1.0 - Initial Commit</p>
+
+<h2>Attribution</h2>
+
+<p>This project uses and is a derivative work of <a href="https://github.com/lichtschlag/iCloudPlayground">iCloudPlayground</a>.</p>
+
+<h2>License</h2>
+
+<p><a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by/3.0/88x31.png"></a><br>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>. You are free to share, remix, and make commercial use of this work. You must attribute this work. For any reuse or distribution, you must make clear to others the license terms of this work and the original author (attribution).</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/iRareMedia/iCloudDocumentSync/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/iRareMedia/iCloudDocumentSync/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/iRareMedia/iCloudDocumentSync"></a> is maintained by <a href="https://github.com/iRareMedia">iRareMedia</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
